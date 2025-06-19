@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Tarea
+from .models.Tarea import Tarea
 from .forms import TareaForm
 
 def tarea_list(request):
