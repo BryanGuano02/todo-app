@@ -1,5 +1,5 @@
 from django import forms
-from .models.Tarea import Tarea
+from .models.entities.Tarea import Tarea
 
 class TareaForm(forms.ModelForm):
     class Meta:
