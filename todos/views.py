@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from .models.services.tareas_service import Tarea_Service
 from .models.entities.Tarea import Tarea
 from .forms import TareaForm
 
@@ -12,8 +13,6 @@ def tarea_create(request):
         if form.is_valid():
             form.save()
             return redirect('tarea_list')
-    else:
-        form = TareaForm()
     return render(request, 'crear.html', {'form': form})
 
 def tarea_update(request, pk):
@@ -30,4 +29,10 @@ def tarea_update(request, pk):
 def tarea_delete(request, pk):
     tarea = get_object_or_404(Tarea, pk=pk)
     tarea.delete()
+    return redirect('tarea_list')
+
+def tarea_toggle_estado(request, pk):
+    tarea = get_object_or_404(Tarea, pk=pk)
+    tarea = Tarea_Service.toggle_estado(tarea)
+    tarea.save()
     return redirect('tarea_list')

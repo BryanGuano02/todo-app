@@ -2,21 +2,117 @@
 <html>
 <head>
     <title>Tareas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .estado-btn {
+            cursor: pointer;
+            transition: transform 0.2s, color 0.2s;
+        }
+        .estado-btn:hover {
+            transform: scale(1.2);
+        }
+        .estado-btn-pending:hover {
+            color: #10B981; /* Green hover */
+        }
+        .estado-btn-complete:hover {
+            color: #6B7280; /* Gray hover */
+        }
+    </style>
 </head>
-<body>
-    <h1>Mis tareas</h1>
-    <a href="{% url 'tarea_create' %}">➕ Nueva tarea</a>
-    <ul>
-        {% for tarea in tareas %}
-            <li>
-                <strong>{{ tarea.titulo }}</strong> ({{ tarea.fecha_limite }}) -
-                {% if tarea.completada %}✅{% else %}❌{% endif %}
-                <a href="{% url 'tarea_update' tarea.id %}">✏️ Editar</a>
-                <a href="{% url 'tarea_delete' tarea.id %}">🗑️ Eliminar</a>
-            </li>
-        {% empty %}
-            <li>No hay tareas.</li>
-        {% endfor %}
-    </ul>
+<body class="bg-gray-50 min-h-screen p-4">
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-xl font-semibold text-gray-800">Mis tareas</h1>
+            <a href="{% url 'tarea_create' %}" class="bg-blue-500 hover:bg-blue-600 text-white py-1.5 px-3 rounded text-sm flex items-center gap-1">
+                <i class="fas fa-plus"></i> Nueva tarea
+            </a>
+        </div>
+
+        <!-- Tareas no completadas -->
+        <div class="mb-8">
+            <h2 class="text-md font-medium text-gray-700 mb-3 flex items-center">
+                <i class="far fa-circle-check mr-2 text-gray-400"></i> Tareas pendientes
+            </h2>
+            <ul class="space-y-2">
+            {% for tarea in tareas %}
+                {% if not tarea.completada %}
+                <li class="bg-gray-50 p-3 rounded-md border border-gray-100 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <a href="{% url 'tarea_toggle_estado' tarea.id %}" class="text-lg text-gray-400 estado-btn estado-btn-pending" title="Marcar como completada">
+                            <i class="far fa-circle"></i>
+                        </a>
+                        <div>
+                            <strong class="text-base font-medium text-gray-800">{{ tarea.titulo }}</strong>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-xs px-2 py-0.5 bg-gray-200 text-gray-700 rounded">{{ tarea.categoria }}</span>
+                                {% if tarea.fecha_limite %}
+                                <span class="text-xs text-gray-500 flex items-center">
+                                    <i class="far fa-calendar mr-1"></i> {{ tarea.fecha_limite|date:"d/m/Y" }}
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="{% url 'tarea_update' tarea.id %}" class="text-blue-500 hover:text-blue-700" title="Editar">
+                            <i class="fas fa-pen"></i>
+                        </a>
+                        <a href="{% url 'tarea_delete' tarea.id %}" class="text-red-500 hover:text-red-700" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </li>
+                {% endif %}
+            {% endfor %}
+            {% if not tareas|dictsortreversed:"completada"|first %}
+                <li class="text-center py-4 text-gray-400 italic text-sm">No hay tareas pendientes.</li>
+            {% endif %}
+            </ul>
+        </div>
+
+        <!-- Tareas completadas -->
+        <div>
+            <h2 class="text-md font-medium text-gray-700 mb-3 flex items-center">
+                <i class="fas fa-circle-check mr-2 text-green-500"></i> Completadas
+            </h2>
+            <ul class="space-y-2">
+            {% for tarea in tareas %}
+                {% if tarea.completada %}
+                <li class="bg-gray-50 p-3 rounded-md border border-gray-100 flex items-center justify-between opacity-75">
+                    <div class="flex items-center gap-3">
+                        <a href="{% url 'tarea_toggle_estado' tarea.id %}" class="text-lg text-green-500 estado-btn estado-btn-complete" title="Marcar como pendiente">
+                            <i class="fas fa-circle-check"></i>
+                        </a>
+                        <div>
+                            <strong class="text-base font-medium text-gray-600 line-through">{{ tarea.titulo }}</strong>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-xs px-2 py-0.5 bg-gray-200 text-gray-600 rounded">{{ tarea.categoria }}</span>
+                                {% if tarea.fecha_limite %}
+                                <span class="text-xs text-gray-500 flex items-center">
+                                    <i class="far fa-calendar mr-1"></i> {{ tarea.fecha_limite|date:"d/m/Y" }}
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="{% url 'tarea_update' tarea.id %}" class="text-blue-400 hover:text-blue-700" title="Editar">
+                            <i class="fas fa-pen"></i>
+                        </a>
+                        <a href="{% url 'tarea_delete' tarea.id %}" class="text-red-400 hover:text-red-700" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </li>
+                {% endif %}
+            {% endfor %}
+            {% if not tareas|dictsort:"completada"|first %}
+                <li class="text-center py-4 text-gray-400 italic text-sm">No hay tareas completadas.</li>
+            {% endif %}
+            </ul>
+        </div>
+    </div>
 </body>
 </html>

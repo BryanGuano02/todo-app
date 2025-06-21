@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crear Tarea</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 min-h-screen p-4">
+    <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+        <div class="flex items-center mb-6">
+            <h1 class="text-xl font-semibold text-gray-800">Nueva Tarea</h1>
+        </div>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <input type="text" name="titulo" id="id_titulo" placeholder="Escribe el nombre de Tarea" value="{{ form.titulo.value|default:'' }}"
+                    class="mt-1 block w-full border-0 border-b border-gray-200 focus:border-blue-500 focus:ring-0 text-lg py-2 px-1">
+                {{ form.titulo.errors }}
+            </div>
+
+            <div class="mb-4">
+                <textarea name="descripcion" id="id_descripcion" placeholder="Añadir descripción" rows="3"
+                    class="mt-1 block w-full border border-gray-200 rounded-md focus:border-blue-500 focus:ring-0 text-sm p-3 bg-gray-50">{{ form.descripcion.value|default:'' }}</textarea>
+                {{ form.descripcion.errors }}
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <div class="flex items-center space-x-2 mb-2">
+                        <i class="fas fa-tag text-gray-400"></i>
+                        <label for="id_categoria" class="text-sm text-gray-600">Categoría</label>
+                    </div>
+                    <select name="categoria" id="id_categoria"
+                        class="block w-full border border-gray-200 rounded-md focus:border-blue-500 focus:ring-0 text-sm p-2">
+                        {% for choice in form.fields.categoria.choices %}
+                        <option value="{{ choice.0 }}" {% if form.categoria.value == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                    {{ form.categoria.errors }}
+                </div>
+
+                <div>
+                    <div class="flex items-center space-x-2 mb-2">
+                        <i class="far fa-calendar text-gray-400"></i>
+                        <label for="id_fecha_limite" class="text-sm text-gray-600">Fecha límite</label>
+                    </div>
+                    <input type="datetime-local" name="fecha_limite" id="id_fecha_limite"
+                        value="{{ form.fecha_limite.value|date:'Y-m-d'}}T{{ form.fecha_limite.value|date:'H:i' }}"
+                        class="block w-full border border-gray-200 rounded-md focus:border-blue-500 focus:ring-0 text-sm p-2">
+                    {{ form.fecha_limite.errors }}
+                </div>
+            </div>
+
+            <div class="flex gap-3 justify-end mt-6 border-t pt-4">
+                <a href="{% url 'tarea_list' %}"
+                    class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
+                    Cancelar
+                </a>
+                <button type="submit"
+                    class="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-600 rounded-md shadow-sm transition-colors">
+                    Crear Tarea
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
