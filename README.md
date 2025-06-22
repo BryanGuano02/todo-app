@@ -1,5 +1,9 @@
 # Transformador de Moneda en Java con Swing
 
+Integrantes:
+- **Sebastián Correa**
+- **Bryan Guano**
+
 Este proyecto es un conversor de monedas simple que convierte USD a EUR, COP y PEN. Se utilizó Java con Swing para la interfaz gráfica y se aplicaron principios de Clean Code inspirados en [Clean Code JavaScript](https://github.com/andersontr15/clean-code-javascript-es).
 
 ## Principios aplicados
