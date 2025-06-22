@@ -14,6 +14,7 @@ class Tarea(models.Model):
     completada = models.BooleanField(default=False)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_limite = models.DateTimeField(null=True, blank=True)
+    recordatorio = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.titulo
