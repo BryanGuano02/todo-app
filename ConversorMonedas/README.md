@@ -15,7 +15,7 @@ Este proyecto es un conversor de monedas simple que convierte USD a EUR, COP y P
 
 ## Cómo ejecutar
 
-1. Clona o descarga este proyecto en Eclipse.
+1. Clona o descarga este proyecto.
 2. Asegúrate de tener Java configurado.
 3. Ejecuta la clase `ConversorSwing` como aplicación Java.
 
